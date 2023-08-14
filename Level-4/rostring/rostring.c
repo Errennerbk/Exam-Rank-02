@@ -1,35 +1,61 @@
- #include <unistd.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+void print(char *s)
+{
+    int i = 0;
+    while(s[i])
+    {
+        if (s[i] <= 32)
+            i++;
+        else
+            write(1, &s[i], 1);
+        i++;
+    }
+}
+
+char    **ft_split(char *str)
+{
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    char **res;
+    
+    while (str[i] <= 32)
+        i++;
+    res =(char **)malloc(sizeof(char *) * 1000);
+    while (str[i])
+    {
+        k = 0;
+        res[j] = (char *)malloc(sizeof(char) * 1000);
+        while (str[i] && str[i] <= 32)
+            i++;
+        while (str[i] && str[i] > 32)
+            res[j][k++] = str[i++];
+        res[j][k] = '\0';
+        while (str[i] && str[i] <= 32)
+            i++;
+        j++;
+    }
+    res[j] = 0;
+    return(res);
+}
 
 int main (int ac, char **av)
 {
-    int i = 0;
-    int e = 0;
+    int i = 1;
+    char **words;
 
     if (ac > 1)
     {
-        while (av[1][i] <= 32)
-            i++;
-        while (av[1][i] > 32)
-            i++;
-        while (av[1][i])
+        words = ft_split(av[1]);
+        while (words[i])
         {
-            if (av[1][i] > 32)
-            {
-                while (av[1][i] > 32)
-                {
-                    write(1, &av[1][i], 1);
-                    i++;
-                }
-                write(1, " ", 1);
-            }
-            else 
-                i++;
+            print(words[i]);
+            write(1, " ", 1);
+            i++;
         }
-        while (av[1][e] <= 32)
-            e++;
-        while (av[1][e] > 32)
-            write(1, &av[1][e++], 1);
+        print(words[0]);
     }
-    else
-        write(1, "\n", 1);
+    write(1, "\n", 1);
 }
